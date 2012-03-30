@@ -14,7 +14,7 @@ class RedmineGrackAuth < Rack::Auth::Basic
     permission = (@req.request_method == "POST" && Regexp.new("(.*?)/git-receive-pack$").match(@req.path_info) ? 'rw' : 'r')
 
     begin
-      r = /<membership><project name="#{identifier}" id=/
+      r = /<membership><project [^>]*(name|identifier)="#{identifier}"/
       uri = "#{url}/users/current.xml?include=memberships"
       return false unless r.match(open(uri,
         :http_basic_authentication => [user, pass], 'User-Agent' => 'ruby').read())
